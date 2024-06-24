@@ -70,24 +70,28 @@ namespace DataAccess.Management
         public override decimal Insert(string requestId, IDbTransaction transaction, BillInfo data)
         {
             data.DateCheckout = DateTime.Now;
-            //gọi lại hàm insert chung của class cha để insert bill
-            decimal result = base.Insert(requestId, transaction, data);
+            decimal result = 1;
+            
+            //không có mã khác hàng tức là chưa có thông tin khách hàng này trong hệ thông
+            // => cần thêm mới thông tin khách hàng
+            if (data != null && data?.CustomerId == 0)
+            {
+                CustomerInfo customerInfo = new CustomerInfo();
+                customerInfo.CustomerName = data.CustomerName;
+                customerInfo.PhoneNumber = data.PhoneNumber;
+                customerInfo.CreatedBy = data.CreatedBy;
+                customerInfo.CreatedDate = data.CreatedDate;
+
+                result = _customerDA.Insert(requestId, transaction, customerInfo);
+                data.CustomerId = result;
+            }
 
             //kiểm tra để xử lý thông tin khách hàng
             if (result > 0)
             {
-                //không có mã khác hàng tức là chưa có thông tin khách hàng này trong hệ thông
-                // => cần thêm mới thông tin khách hàng
-                if (data != null && data?.CustomerId == 0)
-                {
-                    CustomerInfo customerInfo = new CustomerInfo();
-                    customerInfo.CustomerName = data.CustomerName;
-                    customerInfo.PhoneNumber = data.PhoneNumber;
-                    customerInfo.CreatedBy = data.CreatedBy;
-                    customerInfo.CreatedDate = data.CreatedDate;
-
-                    _customerDA.Insert(requestId, transaction, customerInfo);
-                }
+               
+                //gọi lại hàm insert chung của class cha để insert bill
+                result = base.Insert(requestId, transaction, data);
             }
 
             return result;
