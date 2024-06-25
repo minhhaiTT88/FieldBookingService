@@ -1,6 +1,8 @@
 ﻿using CommonLib;
+using Dapper;
 using Microsoft.SqlServer.Server;
 using ObjectInfo;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 
@@ -55,6 +57,22 @@ namespace DataAccess.Management
             return sqlCondition;
         }
 
+        public List<FieldInfo> GetFieldsActive(string requestId)
+        {
+            var requestTime = DateTime.Now;
+            Logger.log.Info($"[{requestId}] Start.");
+
+            List<FieldInfo> result = null;
+
+            using var connection = SQLHelper.GetConnection(Config_Info.gConnectionString);
+
+            List<FieldInfo> lstAll = connection.Query<FieldInfo>($"SELECT * FROM {DbTable}").ToList();
+
+            result = lstAll.Where((x)=>x.Status.Equals(FieldStatus.active)).ToList();
+            //
+            Logger.log.Info($"[{requestId}] End. Tong thoi gian {ConstLog.GetProcessingMilliseconds(requestTime)} (ms)");
+            return result;
+        }
         public override decimal InsertChildData(string requestId, IDbTransaction transaction, FieldInfo data)
         {
             decimal result = ErrorCodes.Success;

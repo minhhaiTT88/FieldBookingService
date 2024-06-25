@@ -80,7 +80,7 @@ namespace FieldBookingService.Controllers.Management
         }
 
         [HttpGet("GetTimeSlotByDate")]
-        public virtual async Task<List<TimeSlotInfo>?> GetTimeSlotByDate([FromQuery] decimal fieldId, [FromQuery] DateTime bookingDate)
+        public virtual async Task<List<TimeSlotInfo>?> GetTimeSlotByDate([FromQuery] decimal fieldId, [FromQuery] string bookingDate)
         {
             var requestId = Utils.GenGuidStringN();
             var requestTime = DateTime.Now;

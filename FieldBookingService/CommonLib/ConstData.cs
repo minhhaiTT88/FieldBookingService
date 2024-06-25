@@ -22,7 +22,11 @@ namespace CommonLib
     }
 
 
-
+    public static class FieldStatus
+    {
+        public const string active = "A";
+        public const string inactive = "I";
+    }
     public static class BillDetailType
     {
         public const string product = "PR";

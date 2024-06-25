@@ -13,6 +13,7 @@ namespace ObjectInfo
         public string TimeFromStr { get; set; } = string.Empty;
         public DateTime TimeTo { get; set; }
         public string TimeToStr { get; set; } = string.Empty;
+        public string TimeFormatted { get; set; } = string.Empty;
         public decimal Valid { get; set; }
         public decimal Price { get; set; }
         public bool Enable { get; set; }

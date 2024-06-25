@@ -136,7 +136,7 @@ namespace DataAccess.Management
             return result;
         }
 
-        public List<TimeSlotInfo> GetTimeSlotByDate(string requestId, decimal fieldId, DateTime bookingDate)
+        public List<TimeSlotInfo> GetTimeSlotByDate(string requestId, decimal fieldId, string bookingDate)
         {
             var requestTime = DateTime.Now;
             Logger.log.Info($"[{requestId}] Start. data=[{JsonHelper.Serialize(new { fieldId, bookingDate })}]");
@@ -145,14 +145,14 @@ namespace DataAccess.Management
             connection.Open();
             using var transaction = connection.BeginTransaction();
 
-            string sqlText = $"select b.*, a.Valid from (" +
+            string sqlText = $"select b.*, a.Valid, FORMAT(b.TimeFrom,'HH\\hmm') + ' - ' + FORMAT(b.TimeTo,'HH\\hmm') AS TimeFormatted from (" +
                 $"select TimeSlotId, 0 as Valid  from {CommonLib.DbTable.FIELDBOOKING} a where FieldId = 4 AND BookingDate = @bookingDate AND status != '{FieldBookingStatus.reject}' " +
                 $"UNION " +
                 $"select TimeSlotId, 1 as Valid from {CommonLib.DbTable.TIMESLOT} b where FieldId = @fieldId) a " +
                 $"JOIN {CommonLib.DbTable.TIMESLOT} b ON a.TimeSlotId = b.TimeSlotId " +
                 $"ORDER BY b.Position";
 
-            var param = new { bookingDate = bookingDate.ToString("yyyy-MM-dd"), fieldId };
+            var param = new { bookingDate, fieldId };
 
             List<TimeSlotInfo> result = transaction.Connection.Query<TimeSlotInfo>(sqlText, param, transaction).ToList();
 
