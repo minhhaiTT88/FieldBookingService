@@ -68,7 +68,7 @@ namespace DataAccess.Management
 
             List<FieldInfo> lstAll = connection.Query<FieldInfo>($"SELECT * FROM {DbTable}").ToList();
 
-            result = lstAll.Where((x)=>x.Status.Equals(FieldStatus.active)).ToList();
+            result = lstAll.Where((x) => x.Status.Equals(FieldStatus.active)).ToList();
             //
             Logger.log.Info($"[{requestId}] End. Tong thoi gian {ConstLog.GetProcessingMilliseconds(requestTime)} (ms)");
             return result;
@@ -78,7 +78,10 @@ namespace DataAccess.Management
             decimal result = ErrorCodes.Success;
             if (data != null && data.TimeSlots?.Count > 0)
             {
-                data.TimeSlots.ForEach(x => { x.FieldId = data.FieldId; });
+                data.TimeSlots.ForEach(x =>
+                {
+                    x.FieldId = data.FieldId;
+                });
                 result = _timeSlotDA.Insert_List(requestId, transaction, data.TimeSlots, out var rescode);
             }
             return result;
@@ -98,14 +101,6 @@ namespace DataAccess.Management
                     data.TimeSlots.ForEach(x =>
                     {
                         x.FieldId = data.FieldId;
-                        // Phân tích chuỗi giờ từ string
-                        DateTime _timeFrom;
-                        bool success = DateTime.TryParseExact(x.TimeFromStr, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _timeFrom);
-                        if (success) x.TimeFrom = _timeFrom;
-
-                        DateTime _timeTo;
-                        success = DateTime.TryParseExact(x.TimeToStr, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _timeTo);
-                        if (success) x.TimeTo = _timeTo;
 
                     });
                     result = _timeSlotDA.Insert_List(requestId, transaction, data.TimeSlots, out var rescode);
@@ -127,5 +122,31 @@ namespace DataAccess.Management
             }
             return data;
         }
+
+        public override decimal Delete(string requestId, IDbTransaction transaction, decimal id)
+        {
+            if (CheckUsedInFieldBooking(transaction, id) > 0)
+            {
+                return -5;
+            }
+            decimal result = _timeSlotDA.DeleteByParent(requestId, transaction, id);
+            if(result > 0)
+            {
+                result = base.Delete(requestId, transaction, id);
+            }
+
+            return result;
+        }
+
+        public decimal CheckUsedInFieldBooking(IDbTransaction transaction, decimal id)
+        {
+            string sqlText = $"SELECT count(*) FROM {CommonLib.DbTable.FIELDBOOKING} " +
+                $"WHERE {ProfileKeyField} = @id";
+
+            decimal result = transaction.Connection.QueryFirstOrDefault<decimal>(sqlText, new { id }, transaction);
+
+            return result;
+        }
+
     }
 }

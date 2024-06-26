@@ -1,12 +1,8 @@
 ﻿using CommonLib;
 using Dapper;
 using ObjectInfo;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DataAccess.Management
 {
@@ -21,16 +17,10 @@ namespace DataAccess.Management
         public override string DbTable => CommonLib.DbTable.BILLDETAIL;
         public override string InsertSqlText => $@"
                 INSERT INTO {DbTable} (
-                    BillDetailId, BillId, Type, ProductId, Count
+                    BillDetailId, BillId, ProductId, ProductName, Count, Price, Description
                 ) VALUES (
-                    @BillDetailId, @BillId, @Type, @ProductId, @Count
+                    @BillDetailId, @BillId, @ProductId, @ProductName, @Count, @Price, @Description
                 )";
-        public override string UpdateSqlText => $@"
-                UPDATE {DbTable} SET 
-                    Type = @Type, 
-                    ProductId = @ProductId, 
-                    Count = @Count
-                WHERE {ProfileKeyField} = @BillDetailId ";
 
         public List<BillDetailInfo> GetByParentId(string requestId, decimal parentId)
         {
@@ -41,7 +31,7 @@ namespace DataAccess.Management
             var requestTime = DateTime.Now;
             Logger.log.Info($"[{requestId}] Start. parentId=[{parentId}]]");
 
-            string sqlText = $"SELECT * FROM {DbTable} WHERE BillId = @parentId";
+            string sqlText = $"SELECT * FROM vw_{DbTable} WHERE BillId = @parentId";
             var result = transaction.Connection.Query<BillDetailInfo>(sqlText, new { parentId }, transaction).ToList();
 
             //

@@ -36,6 +36,9 @@ namespace FieldBookingService.Controllers.Management
 
             try
             {
+                data.CreatedBy = clientInfo?.UserName ?? string.Empty;
+                data.CreatedDate = clientInfo?.ActionTime ?? DateTime.Now;
+
                 var result = await Task.Run(() =>
                 {
                     var createResult = new BillDA().PaymentField(requestId, data);

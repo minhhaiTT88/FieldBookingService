@@ -20,11 +20,11 @@ namespace DataAccess.Management
         public override string DbTable => CommonLib.DbTable.BILL;
         public override string InsertSqlText => $@"
                 INSERT INTO {DbTable} (
-                    BillId, DateCheckout, CustomerId, FieldId, PaymentMethod, Fee, 
+                    BillId, Code, DateCheckout, CustomerId, FieldId, PaymentMethod, Fee, 
                     TotalBeforeDiscount, Discount, Description, Total,
                     CreatedBy, CreatedDate
                 ) VALUES (
-                    @BillId, @DateCheckout, @CustomerId, @FieldId, @PaymentMethod, @Fee, 
+                    @BillId, @Code, @DateCheckout, @CustomerId, @FieldId, @PaymentMethod, @Fee, 
                     @TotalBeforeDiscount, @Discount, @Description, @Total,
                     @CreatedBy, @CreatedDate
                 )";

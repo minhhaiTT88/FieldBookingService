@@ -61,12 +61,7 @@ namespace DataAccess.Management
             //
             var deleteCount = transaction.Connection.Execute(sqlText, new { parentId }, transaction);
 
-            //if (deleteCount > 0)
-            //{
-            //    transaction.Commit();
-            //}
-
-            result = deleteCount == 1 ? ErrorCodes.Success : ErrorCodes.Err_InvalidData;
+            result = deleteCount > 0 ? ErrorCodes.Success : ErrorCodes.Err_InvalidData;
 
         //
         endFunc:
