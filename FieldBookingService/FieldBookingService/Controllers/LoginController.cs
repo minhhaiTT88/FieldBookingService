@@ -77,7 +77,7 @@ namespace FieldBookingService.Controllers
         private async Task<IActionResult> DoCheckPassword(TokenRequestParams parameters)
         {
             // Lấy cấu hình có sử dụng ldap khi đăng nhập không
-            if (parameters.User_Name == null || parameters.User_Name == "")
+            if (parameters.UserName == null || parameters.UserName == "")
             {
                 return Ok(new BaseInfo() { Code = -1, Message = "User không được để trống" });
             }
@@ -86,13 +86,13 @@ namespace FieldBookingService.Controllers
             {
                 return Ok(new BaseInfo() { Code = -1, Message = "Password không được để trống" });
             }
-            Logger.log.Debug("begin login user_name " + parameters.User_Name + " login password " + parameters.Password);
+            Logger.log.Debug("begin login user_name " + parameters.UserName + " login password " + parameters.Password);
 
-            var user = AuthenticateUser(parameters.User_Name, parameters.Password);
+            var user = AuthenticateUser(parameters.UserName, parameters.Password);
 
-            if (user != null && user.User_Name != null)
+            if (user != null && user.UserName != null)
             {
-                Logger.log.Debug("done login user_name " + parameters.User_Name + " login password " + parameters.Password);
+                Logger.log.Debug("done login user_name " + parameters.UserName + " login password " + parameters.Password);
 
                 var now = DateTime.UtcNow;
                 var refresh_token = new IdentityRefreshToken
@@ -116,7 +116,7 @@ namespace FieldBookingService.Controllers
             }
             else
             {
-                Logger.log.Debug("NULL login user_name " + parameters.User_Name + " login password " + parameters.Password);
+                Logger.log.Debug("NULL login user_name " + parameters.UserName + " login password " + parameters.Password);
 
                 return Ok(new BaseInfo() { Code = -1, Message = "Tài khoản hoặc mật khẩu không đúng" });
             }
@@ -221,7 +221,7 @@ namespace FieldBookingService.Controllers
             var claims = new Claim[]
             {
                 new Claim(CustomClaimTypes.UserId, user.UserId.ToString()),
-                new Claim(ClaimTypes.GivenName, user.User_Name, ClaimValueTypes.String),
+                new Claim(ClaimTypes.GivenName, user.UserName, ClaimValueTypes.String),
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString(), ClaimValueTypes.String),
             };
 
@@ -250,11 +250,11 @@ namespace FieldBookingService.Controllers
                 Access_Token = accessToken,
                 ExpiryTime = expires,
                 Refresh_Token,
-                User_Name = user.User_Name,
-                Full_Name = user.Full_Name,
-                User_Type = user.User_Type,
-                User_Type_Text = user.User_Type_Text,
-                Link_Server_file = CommonData.Address_Server_Save_file + CommonData.FileAttach + "/",
+                UserName = user.UserName,
+                FullName = user.FullName,
+                UserType = user.UserType,
+                UserTypeText = user.UserTypeText,
+                //Link_Server_file = CommonData.Address_Server_Save_file + CommonData.FileAttach + "/",
             };
 
             return new Tuple<string, string>(Newtonsoft.Json.JsonConvert.SerializeObject(response), accessToken);

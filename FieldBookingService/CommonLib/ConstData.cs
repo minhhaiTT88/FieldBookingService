@@ -87,6 +87,7 @@ namespace CommonLib
 
     public static class DbTable
     {
+        public const string UserAccount = "TaiKhoan";
         public const string PRODUCT = "SanPham";
         public const string FIELD = "SanBong";
         public const string FIELDBOOKING = "DonDatSan";

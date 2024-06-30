@@ -23,8 +23,8 @@ namespace FieldBookingService
             return new SAUser
             {
                 UserId = user.UserId,
-                Full_Name = user.Full_Name,
-                User_Name = user.User_Name,
+                FullName = user.FullName,
+                UserName = user.UserName,
             };
         }
 
