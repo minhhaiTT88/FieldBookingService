@@ -165,15 +165,16 @@ namespace DataAccess
             CommonFunc.SetProfileKeyField(data, ProfileKeyField, nextId);
             //
             var insertCount = transaction.Connection.Execute(InsertSqlText, data, transaction);
-
-            result = insertCount > 0 ? nextId : ErrorCodes.Err_InvalidData;
+            decimal insertChildCount = -1;
+            
 
             //
-            if (result > 0)
+            if (insertCount > 0)
             {
-                result = InsertChildData(requestId, transaction, data);
-            }
 
+                insertChildCount = InsertChildData(requestId, transaction, data);
+            }
+            result = insertChildCount > 0 ? nextId : ErrorCodes.Err_InvalidData;
         //
         endFunc:
             Logger.log.Info($"[{requestId}] End. Tong thoi gian {ConstLog.GetProcessingMilliseconds(requestTime)} (ms)");
