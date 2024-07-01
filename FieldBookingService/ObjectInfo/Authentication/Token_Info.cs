@@ -4,7 +4,7 @@
     {
         public string Grant_type { get; set; } = string.Empty;
         public string Refresh_Token { get; set; } = string.Empty;
-        public string User_Name { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
     }
 
