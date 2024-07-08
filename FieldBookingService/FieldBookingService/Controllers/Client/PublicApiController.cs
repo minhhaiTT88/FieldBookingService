@@ -4,6 +4,7 @@ using CommonLib;
 using DataAccess.Management;
 using FieldBookingService.Helper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ObjectInfo;
 
 namespace FieldBookingService.Controllers.Management
@@ -105,9 +106,24 @@ namespace FieldBookingService.Controllers.Management
                     return new Tuple<decimal>(createResult);
                 });
 
+                
+
                 //
                 response.code = result.Item1;
-                response.message = "Đặt sân thành công";
+
+                if (response.code > 0)
+                {
+                    response.message = "Đặt sân thành công";
+
+
+                    //gửi thông báo thành công đi bằng web socket
+                    Socket_Message_Info _msg = new Socket_Message_Info();
+                    _msg.type = "BOOKING_SUCCESS";
+                    _msg.content = data;
+                    WebsocketHandler.BroardCastMsg(JsonConvert.SerializeObject(_msg));
+                }
+
+                
 
                 if (response.code <= 0)
                 {
