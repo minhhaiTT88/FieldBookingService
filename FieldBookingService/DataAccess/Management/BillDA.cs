@@ -38,13 +38,13 @@ namespace DataAccess.Management
                 //FieldName
                 if (listKeySearch.Length >= 1 && listKeySearch[0] != "")
                 {
-                    sqlCondition += $" AND FieldName like '%{listKeySearch[0]}%' ";
+                    sqlCondition += $" AND upper(CustomerName) like N'%{listKeySearch[0].ToUpper()}%' ";
                 }
 
                 //CustomerName
                 if (listKeySearch.Length >= 2 && listKeySearch[1] != "")
                 {
-                    sqlCondition += $" AND CustomerName like '%{listKeySearch[1]}%' ";
+                    sqlCondition += $" AND PhoneNumber like '%{listKeySearch[1]}%' ";
                 }
             }
             return sqlCondition;
@@ -71,7 +71,7 @@ namespace DataAccess.Management
         {
             data.DateCheckout = DateTime.Now;
             decimal result = 1;
-            
+
             //không có mã khác hàng tức là chưa có thông tin khách hàng này trong hệ thông
             // => cần thêm mới thông tin khách hàng
             if (data != null && data?.CustomerId == 0)
@@ -89,7 +89,7 @@ namespace DataAccess.Management
             //kiểm tra để xử lý thông tin khách hàng
             if (result > 0)
             {
-               
+
                 //gọi lại hàm insert chung của class cha để insert bill
                 result = base.Insert(requestId, transaction, data);
             }

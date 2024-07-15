@@ -42,7 +42,7 @@ namespace DataAccess.Management
                 //StaffName
                 if (listKeySearch.Length >= 1 && listKeySearch[0] != "")
                 {
-                    sqlCondition += $" AND UPPER(StaffName) like '%{listKeySearch[0].ToUpper()}%' ";
+                    sqlCondition += $" AND UPPER(StaffName) like N'%{listKeySearch[0].ToUpper()}%' ";
                 }
 
                 //PhoneNumber
