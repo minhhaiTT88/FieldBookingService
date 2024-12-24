@@ -1,5 +1,5 @@
 ﻿using CommonLib;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc; 
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +7,7 @@ using ObjectInfo;
 using FieldBookingService.Helper;
 using FieldBookingService.Memory;
 using Microsoft.AspNetCore.Authorization;
-using BusinessLayer.Base;
+using BusinessLayer.Base;  // chứa lớp logic nghiệp vụ 
 using Newtonsoft.Json;
 using ObjectInfo.Core;
 

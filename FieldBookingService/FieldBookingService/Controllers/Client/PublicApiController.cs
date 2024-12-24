@@ -20,7 +20,7 @@ namespace FieldBookingService.Controllers.Management
             _fieldBookingBL = fieldBookingBL;
         }
 
-        [HttpGet("GetFieldsActive")]
+        [HttpGet("GetFieldsActive")] // Lấy danh sách sân đang còn trống 
         public async Task<List<FieldInfo>?> GetFieldsActive()
         {
             var requestId = Utils.GenGuidStringN();
@@ -55,7 +55,7 @@ namespace FieldBookingService.Controllers.Management
         }
 
 
-        [HttpGet("GetTimeSlotByDate")]
+        [HttpGet("GetTimeSlotByDate")] // Lấy danh sách khung giờ trống của sân vào ngày chỉ định 
         public async Task<List<TimeSlotInfo>?> GetTimeSlotByDate([FromQuery] decimal fieldId, [FromQuery] string bookingDate)
         {
             var requestId = Utils.GenGuidStringN();
@@ -89,7 +89,7 @@ namespace FieldBookingService.Controllers.Management
             return response;
         }
 
-        [HttpPost("ConfirmBooking")]
+        [HttpPost("ConfirmBooking")] //Xác nhận đặt sân và gửi thông báo qua websocket nếu thành công
         public async Task<MasterDataBaseBusinessResponse> ConfirmBooking([FromBody] FieldBookingInfo data)
         {
             var requestId = Utils.GenGuidStringN();

@@ -61,7 +61,7 @@ namespace DataAccess.Management
                 //Status
                 if (listKeySearch.Length >= 4 && listKeySearch[3] != "")
                 {
-                    sqlCondition += $" AND Status = {listKeySearch[3]} ";
+                    sqlCondition += $" AND Status = '{listKeySearch[3]}' ";
                 }
 
                 //Booking date from
